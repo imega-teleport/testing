@@ -1,7 +1,9 @@
 services:
 - docker
 script:
-- make build || exit 1
+- make test || exit 1
+after_script:
+- make clean
 notifications:
   slack:
     secure: mZO7v0xo0thE0Vqt0al8ntfpyADFfpbYuEJn2s4nrPudKLmM0bxtSmWBoxdQnNeUG+DPMR/J3Wg+6bNyVPO60rdzLX+cIRvh/SydFJIgVACvmMM7rh+cjT6CKqz+6QmFMgz/Y3/tB3Cw6FZ3fuJtnMwLxlshhNf3Qsnyxy+vqv2TKSxSiINsktSZyNbVxNSJF2UHgUoZ+2Ab7sjkAxj1IWLUmNLWIVa5ADiP4Hd6gCxHtqsoV46YfhUYIX3hYmth5Bh17uW5NdtycL0fI5RZqyRIiSUA5zWcEYhsaiY5lAJUABKC0ZMDurag1TLrkfxQlmzN3l8BHxVnY8GI+QJzXv92VHiwkQHMj74y5YytZBDHsw6vAERZG1ZIScVvqcW0iJAGFtdk8jc+N+VC5PcM2caT9hKtJRF90UpMo+9D7QT0lp5qEvVEnrBYFsGexmnPRr7yB4/KvjVN5InXSo+tLHQS0H716UXj0pVV4xaPmfLMIC8wqKnYgLhvnoeiDRqfUIvD0VdTZqpfd+loXCyJneCC+c8hLx80IYlBY1A7qcpKRKsLXwzP333H9cRhtx+SV8NQpEJggyF1LtrFkjBVkdqDLdgtpmAzb5XdhP3YVvA2Sk5unP4cg1FUrJKeusIBY70nocd6wSEN/VtbjGcfDxTEAJLJdh3PobQ2N7X+Vdg=
