@@ -6,6 +6,12 @@ TELEPORT_DATA_PORT = 6379
 TELEPORT_DATA_IP =
 
 test: data_dir $(SRV_OBJ)
+	@docker exec teleport_data \
+		sh -c 'echo "SET auth:9915e49a-4de1-41aa-9d7d-c9a687ec048d 8c279a62-88de-4d86-9b65-527c81ae767a" | redis-cli --pipe'
+	@docker run --rm \
+		-v $(CURDIR)/tests:/data \
+		--link teleport_acceptor:acceptor \
+		alpine sh -c 'apk --upd --no--cache add bash curl zip && /data/simulator1c.sh acceptor "1C+Enterprise/8.3" "9915e49a-4de1-41aa-9d7d-c9a687ec048d:8c279a62-88de-4d86-9b65-527c81ae767a" /data/fixtures/2.04'
 
 discovery_data:
 	@while [ "`docker inspect -f {{.State.Running}} teleport_data`" != "true" ]; do \
@@ -45,7 +51,7 @@ stop: get_containers
 clean: stop
 	@-docker rm -fv $(CONTAINERS)
 	@-rm -rf $(CON_DIR)/*
-	@-rm -rf data/*
+	@-rm -rf $(CURDIR)/data/*
 
 data_dir:
 	@-mkdir -p $(CURDIR)/data/zip $(CURDIR)/data/unzip $(CURDIR)/data/parse $(CURDIR)/data/storage
