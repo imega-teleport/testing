@@ -29,7 +29,7 @@ $(CON_DIR)/teleport_fileman:
 	@docker run -d \
 		--name teleport_fileman \
 		-v $(CURDIR)/data:/data \
-		imegateleport/tokio
+		imegateleport/fileman
 	@touch $@
 
 $(CON_DIR)/teleport_acceptor: discovery_data
@@ -50,7 +50,7 @@ stop: get_containers
 
 clean: stop
 	@-docker rm -fv $(CONTAINERS)
-	@-rm -rf $(CON_DIR)/*
+	@-rm -rf $(CURDIR)/build/*
 	@-rm -rf $(CURDIR)/data/*
 
 data_dir:
