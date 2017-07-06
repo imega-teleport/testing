@@ -1,5 +1,5 @@
 CON_DIR = build/containers
-SRV = data fileman acceptor
+SRV = data db fileman acceptor
 SRV_OBJ = $(addprefix $(CON_DIR)/teleport_,$(SRV))
 
 TELEPORT_DATA_PORT = 6379
@@ -24,10 +24,22 @@ $(CON_DIR)/teleport_data:
 	@docker run -d --name teleport_data -v $(CURDIR)/data:/data imega/redis
 	@touch $@
 
+$(CON_DIR)/teleport_db:
+	@mkdir -p $(shell dirname $@)
+	@docker run -d -p 3306:3306 --name "teleport_db" imega/mysql
+	@docker run --rm \
+		-v $(CURDIR)/sql:/sql \
+		--link teleport_db:s \
+		imega/mysql-client \
+		mysql --host=s -e "source /sql/schema.sql"
+	@touch $@
+
 $(CON_DIR)/teleport_fileman:
 	@mkdir -p $(shell dirname $@)
 	@docker run -d \
 		--name teleport_fileman \
+		--link teleport_db:server_db \
+		-e DB_HOST=server_db:3306 \
 		-v $(CURDIR)/data:/data \
 		imegateleport/fileman
 	@touch $@
